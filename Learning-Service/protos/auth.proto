@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "genprotos/";
+
+
+// Auth servisi
+service AuthService {
+    rpc RegisterUser (RegisterUserRequest) returns (RegisterUserResponse);
+    rpc LoginUser (LoginUserRequest) returns (LoginUserResponse);
+    rpc LogoutUser (LogoutUserRequest) returns (LogoutUserResponse);
+    rpc ForgotPassword (ForgotPasswordRequest) returns (ForgotPasswordResponse);
+    rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse);
+}
+
+
+// Foydalanuvchi registratsiyasi so'rovi
+message RegisterUserRequest {
+    string username = 1; // Foydalanuvchi ismi (login)
+    string password = 2; // Parol
+    string email = 3; // Foydalanuvchi email manzili
+    string native_language = 4; // Foydalanuvchi ona tili
+}
+
+// Foydalanuvchi registratsiyasi javobi
+message RegisterUserResponse {
+    string id = 1; // Yangi foydalanuvchi ID'si
+}
+
+// Foydalanuvchi login so'rovi
+message LoginUserRequest {
+    string username = 1; // Foydalanuvchi ismi (login)
+    string password = 2; // Parol
+}
+
+// Foydalanuvchi login javobi
+message LoginUserResponse {
+    string token = 1; // Avtorizatsiya tokeni
+}
+
+// Foydalanuvchi logout so'rovi
+message LogoutUserRequest {
+    string token = 1; // Avtorizatsiya tokeni
+}
+
+// Foydalanuvchi logout javobi
+message LogoutUserResponse {
+    string message = 1; // Logout holati haqida xabar
+}
+
+// Parol tiklash so'rovi
+message ForgotPasswordRequest {
+    string email = 1; // Foydalanuvchi email manzili
+}
+
+// Parol tiklash javobi
+message ForgotPasswordResponse {
+    string message = 1; // Parol tiklash haqida xabar
+}
+
+// Parol yangilash so'rovi
+message ResetPasswordRequest {
+    string token = 1; // Parol tiklash tokeni
+    string new_password = 2; // Yangi parol
+}
+
+// Parol yangilash javobi
+message ResetPasswordResponse {
+    string message = 1; // Parol yangilash holati haqida xabar
+}
+
+
+
+

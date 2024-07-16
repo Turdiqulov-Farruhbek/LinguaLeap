@@ -1,0 +1,155 @@
+syntax = "proto3";
+
+package language_learning;
+
+option go_package = "genprotos/";
+
+
+// Xizmatlar ta'rifi
+service LanguageLearningService {
+    // Tillar haqida ma'lumot olish
+    rpc GetLanguages (Empty) returns (LanguagesResponse);
+    // Darslar haqida ma'lumot olish
+    rpc GetLessons (LanguageRequest) returns (LessonsResponse);
+    // Dars tafsilotlarini olish
+    rpc GetLessonDetails (LessonRequest) returns (Lesson);
+    // Mashqlar haqida ma'lumot olish
+    rpc GetExercises (LanguageRequest) returns (ExercisesResponse);
+    // Leksika haqida ma'lumot olish
+    rpc GetVocabulary (LanguageRequest) returns (VocabularyResponse);
+    // Talaffuz mashqlarini topshirish
+    rpc SubmitPronunciation (ExerciseRequest) returns (ExerciseResponse);
+    // Mashq topshirish
+    rpc SubmitExercise (ExerciseRequest) returns (ExerciseResponse);
+    // So'z qo'shish
+    rpc AddVocabulary (VocabularyRequest) returns (VocabularyResponse);
+    // Foydalanuvchi taraqqiyotini olish
+    rpc GetUserProgress (UserRequest) returns (UserProgressResponse);
+    // Yangi til o'rganishni boshlash
+    rpc StartLearningLanguage (LanguageRequest) returns (LanguageResponse);
+    // Darsni tugatish
+    rpc CompleteLesson (LessonRequest) returns (LessonResponse);
+}
+
+
+message Empty {}
+
+
+// Tillar haqida ma'lumot
+message Language {
+    string id = 1; // UUID turi, tilning ID'si
+    string language_code = 2; // Til kodi, masalan, 'en', 'uz'
+    string name = 3; // Til nomi, masalan, 'Ingliz tili', 'O'zbek tili'
+}
+
+// Darslar haqida ma'lumot
+message Lesson {
+    string id = 1; // UUID turi, darsning ID'si
+    string language_code = 2; // Til kodi, masalan, 'en', 'uz'
+    string title = 3; // Dars nomi
+    string level = 4; // Dars darajasi, masalan, 'boshlang'ich', 'o'rta', 'yuqori'
+    string content = 5; // Dars mazmuni JSON formatida
+    string created_at = 6; // Dars yaratilgan vaqti
+}
+
+// Mashqlar haqida ma'lumot
+message Exercise {
+    string id = 1; // UUID turi, mashqning ID'si
+    string language_id = 2; // Til jadvalidan til ID'si
+    string type = 3; // Mashq turi, masalan, 'tinglash', 'talaffuz'
+    string title = 4; // Mashq nomi
+    string content = 5; // Mashq mazmuni
+}
+
+// So'zlar haqida ma'lumot
+message Vocabulary {
+    string id = 1; // UUID turi, so'zning ID'si
+    string language_code = 2; // Til kodi, masalan, 'en', 'uz'
+    string word = 3; // So'z
+    string translation = 4; // So'z tarjimasi
+    string part_of_speech = 5; // So'zning qismlari (masalan, fe'l, ot)
+    string example_sentence = 6; // Misol jumla
+    string created_at = 7; // Yaratilgan vaqti
+}
+
+// Foydalanuvchi taraqqiyoti haqida ma'lumot
+message UserProgress {
+    string user_id = 1; // Foydalanuvchi ID'si
+    string language_id = 2; // Til jadvalidan til ID'si
+    string lesson_id = 3; // Dars jadvalidan dars ID'si
+    string exercise_id = 4; // Mashq jadvalidan mashq ID'si
+    string vocabulary_id = 5; // Leksika jadvalidan so'z ID'si
+    string completed_at = 6; // Tugatilgan vaqti
+}
+
+
+
+// Tillar haqida javob
+message LanguagesResponse {
+    repeated Language languages = 1;
+}
+
+// Darslar haqida javob
+message LessonsResponse {
+    repeated Lesson lessons = 1;
+}
+
+// Mashqlar haqida javob
+message ExercisesResponse {
+    repeated Exercise exercises = 1;
+}
+
+// Leksika haqida javob
+message VocabularyResponse {
+    repeated Vocabulary vocabulary = 1;
+}
+
+// Foydalanuvchi taraqqiyoti haqida javob
+message UserProgressResponse {
+    repeated UserProgress progress = 1;
+}
+
+// Tillar haqida so'rov
+message LanguageRequest {
+    string language_code = 1;
+}
+
+// Dars haqida so'rov
+message LessonRequest {
+    string lesson_id = 1;
+}
+
+// Mashq haqida so'rov
+message ExerciseRequest {
+    string exercise_id = 1;
+    string answer = 2;
+}
+
+// So'z qo'shish haqida so'rov
+message VocabularyRequest {
+    string language_code = 1;
+    string word = 2;
+    string translation = 3;
+    string part_of_speech = 4;
+    string example_sentence = 5;
+}
+
+// Foydalanuvchi haqida so'rov
+message UserRequest {
+    string user_id = 1;
+}
+
+// Javoblar uchun xabarlar
+message LanguageResponse {
+    Language language = 1;
+}
+
+message LessonResponse {
+    Lesson lesson = 1;
+}
+
+message ExerciseResponse {
+    Exercise exercise = 1;
+}
+
+
