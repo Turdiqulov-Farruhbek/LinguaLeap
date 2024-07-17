@@ -2,111 +2,158 @@ package postgres
 
 import (
 	"context"
-	"library/genproto/users"
-	"github.com/jackc/pgx/v5"
-	"github.com/rs/zerolog/log"
+	"database/sql"
+	"fmt"
+
+	pb "learning/genprotos" // Protobuf faylini import qilish
+
 	"github.com/google/uuid"
-	"time"
+	"github.com/jackc/pgx/v5"
+	"github.com/lib/pq"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type Users struct {
-	Db *pgx.Conn
+type userRepo struct {
+	db *pgx.Conn
 }
 
-func NewUsers(db *pgx.Conn) *Users {
-	return &Users{
-		Db: db,
-	}
+func NewUser(db *pgx.Conn) *userRepo {
+	return &userRepo{db: db}
 }
 
-// CreateUser creates a new user record in the database.
-func (u *Users) CreateUser(ctx context.Context, req *users.CreateUserRequest) (*users.CreateUserResponse, error) {
-	id := uuid.NewString()
+func (r *userRepo) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+	id := uuid.New().String()
+
 	query := `
-	INSERT INTO users (id, username, email, password) 
-	VALUES ($1, $2, $3, $4)
-	RETURNING id, username, email, created_at, updated_at`
+		INSERT INTO users (id, username, email, password_hash, full_name, native_language, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+		RETURNING id
+	`
 
-	var user users.User
-	err := u.Db.QueryRow(ctx, query, id, req.Username, req.Email, req.Password).
-		Scan(&user.Id, &user.Username, &user.Email, &user.CreatedAt, &user.UpdatedAt)
-
+	_, err := r.db.Exec(ctx, query, id, req.Username, req.Email, req.Password, req.FullName, req.NativeLanguage)
 	if err != nil {
-		log.Error().Err(err).Msg("Error creating user")
-		return nil, err
+		return nil, fmt.Errorf("could not execute query: %v", err)
 	}
 
-	return &users.CreateUserResponse{User: &user}, nil
+	return &pb.CreateUserResponse{Id: id}, nil
 }
 
-// UpdateUser updates an existing user record in the database.
-func (u *Users) UpdateUser(ctx context.Context, req *users.UpdateUserRequest) (*users.UpdateUserResponse, error) {
+func (r *userRepo) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	query := `
-	UPDATE users
-	SET username = $1, email = $2, password = $3, updated_at = CURRENT_TIMESTAMP
-	WHERE id = $4 AND deleted_at = 0
-	RETURNING id, username, email, created_at, updated_at`
+		SELECT id, username, email, password_hash, full_name, native_language, created_at, updated_at
+		FROM users
+		WHERE id = $1
+	`
 
-	var user users.User
-	err := u.Db.QueryRow(ctx, query, req.Username, req.Email, req.Password, req.Id).
-		Scan(&user.Id, &user.Username, &user.Email, &user.CreatedAt, &user.UpdatedAt)
+	row := r.db.QueryRow(ctx, query, req.UserId)
 
+	var user pb.User
+	var createdAt, updatedAt pq.NullTime
+
+	err := row.Scan(&user.Id, &user.Username, &user.Email, &user.PasswordHash, &user.FullName, &user.NativeLanguage, &createdAt, &updatedAt)
 	if err != nil {
-		log.Error().Err(err).Msg("Error updating user")
-		return nil, err
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("user not found")
+		}
+		return nil, fmt.Errorf("could not execute query: %v", err)
 	}
 
-	return &users.UpdateUserResponse{User: &user}, nil
-}
-
-// DeleteUser marks a user record as deleted in the database.
-func (u *Users) DeleteUser(ctx context.Context, req *users.DeleteUserRequest) (*users.DeleteUserResponse, error) {
-	query := `UPDATE users SET deleted_at = $1 WHERE id = $2 AND deleted_at = 0`
-	_, err := u.Db.Exec(ctx, query, time.Now().Unix(), req.Id)
-
-	if err != nil {
-		log.Error().Err(err).Msg("Error deleting user")
-		return nil, err
+	if createdAt.Valid {
+		user.CreatedAt = timestamppb.New(createdAt.Time)
+	}
+	if updatedAt.Valid {
+		user.UpdatedAt = timestamppb.New(updatedAt.Time)
 	}
 
-	return &users.DeleteUserResponse{Message: "User deleted successfully"}, nil
+	return &pb.GetUserResponse{User: &user}, nil
 }
 
-// GetUserById fetches a user record by its ID.
-func (u *Users) GetUserById(ctx context.Context, req *users.GetUserByIdRequest) (*users.GetUserByIdResponse, error) {
-	query := `SELECT id, username, email, created_at, updated_at FROM users WHERE id = $1 AND deleted_at = 0`
-	var user users.User
-	err := u.Db.QueryRow(ctx, query, req.Id).
-		Scan(&user.Id, &user.Username, &user.Email, &user.CreatedAt, &user.UpdatedAt)
+func (r *userRepo) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+	query := `
+		UPDATE users
+		SET username = $1, email = $2, password_hash = $3, full_name = $4, native_language = $5, updated_at = CURRENT_TIMESTAMP
+		WHERE id = $6
+		RETURNING id, username, email, password_hash, full_name, native_language, created_at, updated_at
+	`
 
+	row := r.db.QueryRow(ctx, query, req.Username, req.Email, req.Password, req.FullName, req.NativeLanguage, req.Id)
+
+	var user pb.User
+	var createdAt, updatedAt pq.NullTime
+
+	err := row.Scan(&user.Id, &user.Username, &user.Email, &user.PasswordHash, &user.FullName, &user.NativeLanguage, &createdAt, &updatedAt)
 	if err != nil {
-		log.Error().Err(err).Msg("Error getting user by ID")
-		return nil, err
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("user not found")
+		}
+		return nil, fmt.Errorf("could not execute query: %v", err)
 	}
 
-	return &users.GetUserByIdResponse{User: &user}, nil
+	if createdAt.Valid {
+		user.CreatedAt = timestamppb.New(createdAt.Time)
+	}
+	if updatedAt.Valid {
+		user.UpdatedAt = timestamppb.New(updatedAt.Time)
+	}
+
+	return &pb.UpdateUserResponse{User: &user}, nil
 }
 
-// GetAllUsers fetches all user records from the database.
-func (u *Users) GetAllUsers(ctx context.Context, req *users.GetAllUsersRequest) (*users.GetAllUsersResponse, error) {
-	query := `SELECT id, username, email, created_at, updated_at FROM users WHERE deleted_at = 0`
-	rows, err := u.Db.Query(ctx, query)
+func (r *userRepo) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+	query := `
+		DELETE FROM users
+		WHERE id = $1
+		RETURNING id
+	`
+
+	var id string
+	err := r.db.QueryRow(ctx, query, req.Id).Scan(&id)
 	if err != nil {
-		log.Error().Err(err).Msg("Error fetching all users")
-		return nil, err
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("user not found")
+		}
+		return nil, fmt.Errorf("could not execute query: %v", err)
+	}
+
+	return &pb.DeleteUserResponse{Id: id}, nil
+}
+
+func (r *userRepo) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
+	query := `
+		SELECT id, username, email, password_hash, full_name, native_language, created_at, updated_at
+		FROM users
+	`
+
+	rows, err := r.db.Query(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("could not execute query: %v", err)
 	}
 	defer rows.Close()
 
-	var usersList []*users.User
+	var users []*pb.User
+
 	for rows.Next() {
-		var user users.User
-		err := rows.Scan(&user.Id, &user.Username, &user.Email, &user.CreatedAt, &user.UpdatedAt)
+		var user pb.User
+		var createdAt, updatedAt pq.NullTime
+
+		err := rows.Scan(&user.Id, &user.Username, &user.Email, &user.PasswordHash, &user.FullName, &user.NativeLanguage, &createdAt, &updatedAt)
 		if err != nil {
-			log.Error().Err(err).Msg("Error scanning user row")
-			return nil, err
+			return nil, fmt.Errorf("could not scan row: %v", err)
 		}
-		usersList = append(usersList, &user)
+
+		if createdAt.Valid {
+			user.CreatedAt = timestamppb.New(createdAt.Time)
+		}
+		if updatedAt.Valid {
+			user.UpdatedAt = timestamppb.New(updatedAt.Time)
+		}
+
+		users = append(users, &user)
 	}
 
-	return &users.GetAllUsersResponse{Users: usersList}, nil
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows error: %v", err)
+	}
+
+	return &pb.ListUsersResponse{Users: users}, nil
 }

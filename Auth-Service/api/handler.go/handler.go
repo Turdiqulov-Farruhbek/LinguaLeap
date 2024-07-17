@@ -4,9 +4,10 @@ import (
 	"database/sql"
 	"net/http"
 
-	"github.com/Project_Restaurant/Auth-Service/models"
-	"github.com/Project_Restaurant/Auth-Service/postgres"
-	"github.com/Project_Restaurant/Auth-Service/token"
+	
+	"auth/postgres"
+	"auth/token"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -44,7 +45,7 @@ func (h *Handler) Register(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	
+
 	token, err := token.CreateToken(res.Name, res.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

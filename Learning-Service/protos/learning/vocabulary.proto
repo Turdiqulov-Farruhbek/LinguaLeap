@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+option go_package = "genprotos/";
+
+package languagelearning;
+
+// Vocabulary xizmatini aniqlash
+service VocabularyService {
+    // Leksika yozuvini qo'shish uchun RPC
+    rpc AddVocabulary(AddVocabularyRequest) returns (AddVocabularyResponse);
+    // Leksika yozuvini olish uchun RPC
+    rpc GetVocabulary(GetVocabularyRequest) returns (GetVocabularyResponse);
+    // Leksika yozuvi yangilash uchun RPC
+    rpc UpdateVocabulary(UpdateVocabularyRequest) returns (UpdateVocabularyResponse);
+    // Leksika yozuvi o'chirish uchun RPC
+    rpc DeleteVocabulary(DeleteVocabularyRequest) returns (DeleteVocabularyResponse);
+}
+
+// Leksika yozuvini qo'shish uchun xabar
+message AddVocabularyRequest {
+    string language_code = 1; // Til kodi, masalan, 'en', 'uz'
+    string word = 2; // So'z
+    string translation = 3; // So'z tarjimasi
+}
+
+// Leksika yozuvini qo'shish javobi
+message AddVocabularyResponse {
+    string id = 1; // Yaratilgan leksika yozuving UUID si
+}
+
+// Leksika yozuvini olish uchun xabar
+message GetVocabularyRequest {
+    string id = 1; // Leksika yozuving UUID si
+}
+
+// Leksika yozuvini olish javobi
+message GetVocabularyResponse {
+    Vocabulary vocabulary = 1; // Leksika yozuvi haqida ma'lumot
+}
+
+// Leksika yozuvini yangilash uchun xabar
+message UpdateVocabularyRequest {
+    string id = 1; // Leksika yozuving UUID si
+    string language_code = 2; // Til kodi, masalan, 'en', 'uz'
+    string word = 3; // So'z
+    string translation = 4; // So'z tarjimasi
+}
+
+// Leksika yozuvini yangilash javobi
+message UpdateVocabularyResponse {
+    Vocabulary vocabulary = 1; // Yangilangan leksika yozuvi haqida ma'lumot
+}
+
+// Leksika yozuvi o'chirish uchun xabar
+message DeleteVocabularyRequest {
+    string id = 1; // Leksika yozuving UUID si
+}
+
+// Leksika yozuvi o'chirish javobi
+message DeleteVocabularyResponse {
+    string id = 1; // O'chirilgan leksika yozuving UUID si
+}
+
+// Leksika yozuvi haqida ma'lumotni aniqlash uchun xabar
+message Vocabulary {
+    string id = 1; // Leksika yozuving UUID si
+    string language_code = 2; // Til kodi, masalan, 'en', 'uz'
+    string word = 3; // So'z
+    string translation = 4; // So'z tarjimasi
+    string created_at = 5; // Yaratilgan vaqti
+    string updated_at = 6; // Yangilangan vaqti
+}

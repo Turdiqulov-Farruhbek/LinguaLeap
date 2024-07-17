@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option go_package = "genprotos/";
+
+import "google/protobuf/timestamp.proto";
+
+package languagelearning;
+
+// UserLessons xizmatini aniqlash
+service UserLessonService {
+    rpc AddUserLesson(AddUserLessonRequest) returns (AddUserLessonResponse);
+    rpc GetUserLessons(GetUserLessonsRequest) returns (GetUserLessonsResponse);
+}
+
+// Foydalanuvchi darslarini qo'shish uchun xabar
+message AddUserLessonRequest {
+    string user_id = 1; // Foydalanuvchi ID'si
+    string lesson_id = 2; // Dars ID'si
+    google.protobuf.Timestamp completed_at = 3; // Tugatilgan vaqti
+}
+
+// Foydalanuvchi darslarini qo'shish javobi
+message AddUserLessonResponse {
+    int32 id = 1; // Yaratilgan foydalanuvchi darsining ID'si
+}
+
+// Foydalanuvchi darslarini olish uchun xabar
+message GetUserLessonsRequest {
+    string user_id = 1; // Foydalanuvchi ID'si
+}
+
+// Foydalanuvchi darslarini olish javobi
+message GetUserLessonsResponse {
+    repeated UserLesson user_lessons = 1; // Foydalanuvchi darslari ro'yxati
+}
+
+// Foydalanuvchi darsi haqida ma'lumotni aniqlash uchun xabar
+message UserLesson {
+    int32 id = 1; // Foydalanuvchi darsi ID'si
+    string user_id = 2; // Foydalanuvchi ID'si
+    string lesson_id = 3; // Dars ID'si
+    google.protobuf.Timestamp completed_at = 4; // Tugatilgan vaqti
+    google.protobuf.Timestamp created_at = 5; // Yaratilgan vaqti
+    google.protobuf.Timestamp updated_at = 6; // O'zgartirilgan vaqti
+}

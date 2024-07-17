@@ -2,84 +2,67 @@ package service
 
 import (
 	"context"
-	"library/genproto/users"
-	"library/storage"
+	"log"
 
-	"github.com/rs/zerolog/log"
+	pb "learning/genprotos"
+	stg "learning/storage"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-// UsersService struct handles user-related operations by interacting with the storage layer.
-type UsersService struct {
-	stg storage.StorageI
-	users.UnimplementedUsersServiceServer
+type UserService struct {
+	pb.UnimplementedUserServiceServer
+	repo stg.StorageInterface
 }
 
-// NewUsersService initializes and returns a new UsersService instance.
-func NewUsersService(stg storage.StorageI) *UsersService {
-	return &UsersService{stg: stg}
-}
-
-// CreateUser creates a new user.
-func (s *UsersService) CreateUser(ctx context.Context, req *users.CreateUserRequest) (*users.CreateUserResponse, error) {
-	log.Info().Msg("UsersService: CreateUser called")
-
-	resp, err := s.stg.Users().CreateUser(ctx, req)
-	if err != nil {
-		log.Error().Err(err).Msg("UsersService: Error creating user")
-		return nil, err
+func NewUserService(repo stg.StorageInterface) *UserService {
+	return &UserService{
+		repo: repo,
 	}
-
-	return resp, nil
 }
 
-// UpdateUser updates an existing user.
-func (s *UsersService) UpdateUser(ctx context.Context, req *users.UpdateUserRequest) (*users.UpdateUserResponse, error) {
-	log.Info().Msg("UsersService: UpdateUser called")
-
-	resp, err := s.stg.Users().UpdateUser(ctx, req)
+func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+	res, err := s.repo.Users().CreateUser(ctx, req)
 	if err != nil {
-		log.Error().Err(err).Msg("UsersService: Error updating user")
-		return nil, err
+		log.Printf("Failed to create user: %v", err)
+		return nil, status.Errorf(codes.Internal, "Failed to create user: %v", err)
 	}
-
-	return resp, nil
+	return res, nil
 }
 
-// DeleteUser marks a user as deleted.
-func (s *UsersService) DeleteUser(ctx context.Context, req *users.DeleteUserRequest) (*users.DeleteUserResponse, error) {
-	log.Info().Msg("UsersService: DeleteUser called")
-
-	resp, err := s.stg.Users().DeleteUser(ctx, req)
+func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+	res, err := s.repo.Users().GetUser(ctx, req)
 	if err != nil {
-		log.Error().Err(err).Msg("UsersService: Error deleting user")
-		return nil, err
+		log.Printf("Failed to get user: %v", err)
+		return nil, status.Errorf(codes.NotFound, "Failed to get user: %v", err)
 	}
-
-	return resp, nil
+	return res, nil
 }
 
-// GetUserById retrieves a user by their ID.
-func (s *UsersService) GetUserById(ctx context.Context, req *users.GetUserByIdRequest) (*users.GetUserByIdResponse, error) {
-	log.Info().Msg("UsersService: GetUserById called")
-
-	resp, err := s.stg.Users().GetUserById(ctx, req)
+func (s *UserService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+	res, err := s.repo.Users().UpdateUser(ctx, req)
 	if err != nil {
-		log.Error().Err(err).Msg("UsersService: Error getting user by ID")
-		return nil, err
+		log.Printf("Failed to update user: %v", err)
+		return nil, status.Errorf(codes.Internal, "Failed to update user: %v", err)
 	}
-
-	return resp, nil
+	return res, nil
 }
 
-// GetAllUsers retrieves all users.
-func (s *UsersService) GetAllUsers(ctx context.Context, req *users.GetAllUsersRequest) (*users.GetAllUsersResponse, error) {
-	log.Info().Msg("UsersService: GetAllUsers called")
-
-	resp, err := s.stg.Users().GetAllUsers(ctx, req)
+func (s *UserService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+	res, err := s.repo.Users().DeleteUser(ctx, req)
 	if err != nil {
-		log.Error().Err(err).Msg("UsersService: Error getting all users")
-		return nil, err
+		log.Printf("Failed to delete user: %v", err)
+		return nil, status.Errorf(codes.NotFound, "Failed to delete user: %v", err)
 	}
+	return res, nil
+}
 
-	return resp, nil
+func (s *UserService) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
+	res, err := s.repo.Users().ListUsers(ctx, req)
+	if err != nil {
+		log.Printf("Failed to list users: %v", err)
+		return nil, status.Errorf(codes.Internal, "Failed to list users: %v", err)
+	}
+	return res, nil
 }

@@ -9,20 +9,20 @@ services:
     volumes:
       - ./migrations:/migrations
     command: [ "-path", "/migrations", "-database",  
-                "postgres://postgres:root@post:5432/library_db?sslmode=disable", 
+                "postgres://postgres:root@post-db:5432/learning_db?sslmode=disable", 
                 "up" ]
     depends_on:
       - postgres-db
 
   # Postgres Database
   postgres-db:
-    container_name: post
+    container_name: post-db
     image: postgres:latest
     environment:
       PGUSER: postgres
       POSTGRES_PASSWORD: root
       # PGDATA: /data/postgres
-      POSTGRES_DB: library_db
+      POSTGRES_DB: learning_db
     volumes:
       - db:/post-database/post-memory
     ports:
@@ -35,11 +35,33 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+  
+  # MongoDB Database
+  mongodb:
+    container_name: mongo-db
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27018:27017"
+    networks:
+      - GLhost
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "mongo --eval 'db.runCommand({ ping: 1 })'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
-  # library-Service
-  library-service:
-    container_name: lib-service-cont
-    build: .
+  # learning-service
+  learning-service:
+    container_name: learning-service-cont
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - postgres-db
     ports:
@@ -57,3 +79,4 @@ networks:
 # Docker Volumes
 volumes:
   db:
+  mongo-data:

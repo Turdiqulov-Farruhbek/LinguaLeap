@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+option go_package = "genprotos/";
+
+import "google/protobuf/timestamp.proto";
+
+package languagelearning;
+
+
+// Savol yaratish uchun RPC
+service QuestionService {
+    rpc CreateQuestion(CreateQuestionRequest) returns (CreateQuestionResponse);
+    rpc GetQuestion(GetQuestionRequest) returns (GetQuestionResponse);
+    rpc ListQuestions(ListQuestionsRequest) returns (ListQuestionsResponse);
+    rpc UpdateQuestion(UpdateQuestionRequest) returns (UpdateQuestionResponse);
+    rpc DeleteQuestion(DeleteQuestionRequest) returns (DeleteQuestionResponse);
+}
+
+
+// Savol haqida ma'lumotni aniqlash uchun xabar
+message Question {
+    string id = 1; // Savolning UUID si
+    string type = 2; // Savol turi
+    string language_code = 3; // Til kodi, masalan, 'en', 'uz'
+    string difficulty = 4; // Qiyinlik darajasi
+    string question = 5; // Savol matni
+    repeated string options = 6; // Javob variantlari
+    string correct_answer = 7; // To'g'ri javob
+    string explanation = 8; // Javob izohi
+    google.protobuf.Timestamp created_at = 9; // Yaratilgan vaqti
+}
+
+
+// Savol yaratish uchun xabar
+message CreateQuestionRequest {
+    string type = 1; // Savol turi
+    string language_code = 2; // Til kodi, masalan, 'en', 'uz'
+    string difficulty = 3; // Qiyinlik darajasi
+    string question = 4; // Savol matni
+    repeated string options = 5; // Javob variantlari
+    string correct_answer = 6; // To'g'ri javob
+    string explanation = 7; // Javob izohi
+}
+
+// Savol yaratish javobi
+message CreateQuestionResponse {
+    string id = 1; // Yaratilgan savolning UUID si
+}
+
+// Savol haqida ma'lumot so'rash uchun xabar
+message GetQuestionRequest {
+    string id = 1; // Savolning UUID si
+}
+
+// Savol haqida ma'lumot javobi
+message GetQuestionResponse {
+    Question question = 1; // Savol haqida ma'lumot
+}
+
+// Barcha savollar ro'yxatini so'rash uchun xabar
+message ListQuestionsRequest {}
+
+// Barcha savollar ro'yxatini javobi
+message ListQuestionsResponse {
+    repeated Question questions = 1; // Savollarning ro'yxati
+}
+
+// Savolni yangilash uchun xabar
+message UpdateQuestionRequest {
+    string id = 1; // Savolning UUID si
+    string type = 2; // Savol turi
+    string language_code = 3; // Til kodi, masalan, 'en', 'uz'
+    string difficulty = 4; // Qiyinlik darajasi
+    string question = 5; // Savol matni
+    repeated string options = 6; // Javob variantlari
+    string correct_answer = 7; // To'g'ri javob
+    string explanation = 8; // Javob izohi
+}
+
+// Savolni yangilash javobi
+message UpdateQuestionResponse {
+    Question question = 1; // Yangilangan savol haqida ma'lumot
+}
+
+// Savolni o'chirish uchun xabar
+message DeleteQuestionRequest {
+    string id = 1; // Savolning UUID si
+}
+
+// Savolni o'chirish javobi
+message DeleteQuestionResponse {
+    string id = 1; // O'chirilgan savolning UUID si
+}

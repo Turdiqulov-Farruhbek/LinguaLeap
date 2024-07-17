@@ -1,15 +1,17 @@
 package token
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
 
+	pb "auth/models"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
-	pb "github.com/Project_Restaurant/Auth-Service/models"
 )
 
 var secretKey = []byte("secret")
@@ -109,4 +111,49 @@ func HashPassword(password string) (string, error) {
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func ValidateToken(tokenStr string) (bool, error) {
+	log.Println("token from heaf=der ", tokenStr)
+	_, err := ExtractClaim(tokenStr)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func ExtractClaim(tokenStr string) (jwt.MapClaims, error) {
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		return []byte(secretKey), nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("parsing token: %w", err)
+	}
+	fmt.Print(token.Claims)
+	if !token.Valid {
+		return nil, errors.New("invalid token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, errors.New("invalid token claims")
+	}
+
+	return claims, nil
+}
+func JustExtractClaim(tokenStr string) (jwt.MapClaims, error) {
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		return []byte(secretKey), nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("parsing token: %w", err)
+	}
+	// fmt.Print(token.Claims)
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, errors.New("invalid token claims")
+	}
+
+	return claims, nil
 }

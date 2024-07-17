@@ -1,1 +1,1 @@
-drop table Users, Authors, Genres, Books, Borrowers;
+drop table Users, user_languages, languages, lessons, user_lessons, vocabulary, user_progress CASCADE;

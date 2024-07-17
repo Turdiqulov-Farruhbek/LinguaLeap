@@ -4,14 +4,16 @@ COPY go.mod ./
 COPY go.sum ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o myapp ./cmd
-
+RUN CGO_ENABLED=0 GOOS=linux go build -o myapp ./cmd 
 
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/myapp .
+COPY .env .env
 EXPOSE 9090
 CMD ["./myapp"]
+    
+
 
 
 

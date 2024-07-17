@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/Project_Restaurant/Auth-Service/models"
-	t "github.com/Project_Restaurant/Auth-Service/token"
+	"auth/models"
+	t "auth/token"
+
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -17,7 +18,6 @@ type UserRepo struct {
 func NewUserRepo(db *sql.DB) *UserRepo {
 	return &UserRepo{db: db}
 }
-
 
 func (u *UserRepo) Register(user models.UserRegister) (*models.LoginRes, error) {
 	var us models.LoginRes

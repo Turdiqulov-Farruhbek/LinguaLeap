@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Project_Restaurant/Auth-Service/api"
-	"github.com/Project_Restaurant/Auth-Service/postgres"
-	_ "github.com/Project_Restaurant/Auth-Service/docs"
 )
 
 func main() {
