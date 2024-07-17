@@ -19,6 +19,7 @@ func NewUserRepo(db *sql.DB) *UserRepo {
 	return &UserRepo{db: db}
 }
 
+
 func (u *UserRepo) Register(user models.UserRegister) (*models.LoginRes, error) {
 	var us models.LoginRes
 	id := uuid.NewString()
