@@ -1,0 +1,190 @@
+syntax = "proto3";
+
+package game;
+
+option go_package = "genprotos/game";
+
+service GameService {
+  rpc GetLevels(GetLevelsRequest) returns (GetLevelsResponse);
+  rpc StartLevel(StartLevelRequest) returns (StartLevelResponse);
+  rpc CompleteLevel(CompleteLevelRequest) returns (CompleteLevelResponse);
+  
+  rpc GetChallenge(GetChallengeRequest) returns (Challenge);
+  rpc SubmitChallenge(SubmitChallengeRequest) returns (SubmitChallengeResponse);
+  
+  rpc GetSimulations(GetSimulationsRequest) returns (GetSimulationsResponse);
+  rpc GetSimulation(GetSimulationRequest) returns (Simulation);
+  rpc RunSimulation(RunSimulationRequest) returns (SimulationResult);
+  
+  rpc GetLeaderboard(GetLeaderboardRequest) returns (LeaderboardResponse);
+  
+  rpc GetAchievements(GetAchievementsRequest) returns (AchievementsResponse);
+  
+
+  rpc GetQuantumCircuit(GetQuantumCircuitRequest) returns (Circuit);
+
+}
+
+message GetLevelsRequest {
+  string id = 1;
+}
+
+message GetLevelsResponse {
+  repeated Level levels = 1;
+}
+
+message Level {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  int32 required_xp = 4;
+  bool completed = 5;
+  repeated Challenge challenges = 6;
+}
+
+message StartLevelRequest {
+  string token = 1;
+  string level_id = 2;
+}
+
+message StartLevelResponse {
+  string message = 1;
+  string first_challenge_id = 2;
+}
+
+message CompleteLevelRequest {
+  string token = 1;
+  string level_id = 2;
+}
+
+message CompleteLevelResponse {
+  string message = 1;
+  int32 xp_earned = 2;
+  string new_level_unlocked = 3;
+}
+
+message Challenge {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  bool completed = 4;
+}
+
+message GetChallengeRequest {
+  string token = 1;
+  string challenge_id = 2;
+}
+
+message SubmitChallengeRequest {
+  string token = 1;
+  string challenge_id = 2;
+  repeated Answer answers = 3;
+}
+
+message SubmitChallengeResponse {
+  int32 correct_answers = 1;
+  int32 total_questions = 2;
+  int32 xp_earned = 3;
+  string feedback = 4;
+}
+
+message Answer {
+  string question_id = 1;
+  int32 selected_option = 2;
+}
+
+message GetSimulationsRequest {
+  string token = 1;
+}
+
+message GetSimulationsResponse {
+  repeated Simulation simulations = 1;
+}
+
+message Simulation {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string difficulty = 4;
+}
+
+message GetSimulationRequest {
+  string token = 1;
+  string simulation_id = 2;
+}
+
+message RunSimulationRequest {
+  string token = 1;
+  string simulation_id = 2;
+  SimulationParameters parameters = 3;
+}
+
+message SimulationParameters {
+  map<string, string> parameters = 1;
+}
+
+message RunSimulationResponse {
+  SimulationResult simulation_result = 1;
+  int32 xp_earned = 2;
+}
+
+message SimulationResult {
+  repeated float interference_pattern = 1;
+  int32 particle_detections = 2;
+}
+
+message GetLeaderboardRequest {
+  string token = 1;
+}
+
+message LeaderboardResponse {
+  repeated LeaderboardEntry leaderboard = 1;
+  int32 user_rank = 2;
+}
+
+message LeaderboardEntry {
+  int32 rank = 1;
+  string username = 2;
+  int32 level = 3;
+  int32 xp = 4;
+}
+
+message GetAchievementsRequest {
+  string token = 1;
+}
+
+message AchievementsResponse {
+  repeated Achievement achievements = 1;
+}
+
+message Achievement {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string earned_at = 4;
+}
+
+
+
+
+
+message Gate {
+  string type = 1;
+  int32 target = 2;
+  int32 control = 3;
+}
+
+message GetQuantumCircuitRequest {
+  string token = 1;
+  string circuit_id = 2;
+}
+
+message Circuit {
+  string id = 1;
+  string name = 2;
+  int32 qubits = 3;
+  repeated Gate gates = 4;
+  string created_at = 5;
+}
+
+

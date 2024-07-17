@@ -1,19 +1,29 @@
 CURRENT_DIR=$(shell pwd)
+DBURL=postgres://postgres:root@localhost:5432/learning_db?sslmode=disable
 
 proto-gen:
 	./scripts/gen-proto.sh ${CURRENT_DIR}
 
-exp:
-	export DBURL='postgres://postgres:root@localhost:5432/learning_db?sslmode=disable'
-
-mig-run:
-	migrate create -ext sql -dir migrations -seq create_table
-
 mig-up:
-	migrate -database 'postgres://postgres:root@localhost:5432/	?sslmode=disable' -path migrations up
+	migrate -path migrations -database '$(DBURL)' -verbose up
 
 mig-down:
-	migrate -database 'postgres://postgres:root@localhost:5432/learning_db?sslmode=disable' -path migrations down
+	migrate -path migrations -database '$(DBURL)' -verbose down
+
+mig-create:
+	migrate create -ext sql -dir migrations -seq create_table
+
+mig-insert:
+	migrate create -ext sql -dir migrations -seq insert_table
+
+SWAGGER := ~/go/bin/swag
+SWAGGER_DOCS := docs
+SWAGGER_INIT := $(SWAGGER) init -g ./api/api.go -o $(SWAGGER_DOCS)
+
+# Target to generate swagger documentation
+swag-gen:
+	$(SWAGGER_INIT)
+
 
 gen-proto:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest

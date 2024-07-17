@@ -1,1 +1,1 @@
-drop TABLE users;
+DROP TABLE IF EXISTS users, refresh_tokens CASCADE;

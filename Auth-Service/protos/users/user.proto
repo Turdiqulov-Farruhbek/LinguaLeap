@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "genprotos/user";
+
+// User Service Definition
+service UserService {
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+}
+
+// Get Profile Request and Response
+message GetProfileRequest {
+    string token =1;
+}
+
+message GetProfileResponse {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string full_name = 4;
+  int32 level = 5;
+  int32 xp = 6;
+  string created_at = 7;
+}
+
+// Update Profile Request and Response
+message UpdateProfileRequest {
+  string full_name = 1;
+  string avatar_url = 2;
+  string token =3;
+}
+
+message UpdateProfileResponse {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string full_name = 4;
+  string avatar_url = 5;
+  string updated_at = 6;
+}
+
+// Change Password Request and Response
+message ChangePasswordRequest {
+  string current_password = 1;
+  string new_password = 2;
+  string token =3;
+}
+
+message ChangePasswordResponse {
+  string message = 1;
+}
+
+
+

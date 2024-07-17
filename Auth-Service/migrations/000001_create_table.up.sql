@@ -1,32 +1,23 @@
+
 CREATE TABLE users (
-    id UUID PRIMARY KEY, -- Foydalanuvchi ID'si
-    username VARCHAR(50) UNIQUE NOT NULL, -- Foydalanuvchi ismi (login)
-    password VARCHAR(255) NOT NULL, -- Parol hash'i
-    email VARCHAR(100) UNIQUE NOT NULL, -- Foydalanuvchi email manzili
-    native_language VARCHAR(5),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- Yaratilgan sana
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- Yangilangan sana
-    deleted_at BIGINT DEFAULT 0
+    id UUID PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    full_name VARCHAR(100),
+    role VARCHAR(50) DEFAULT 'user',
+    avatar_url VARCHAR(255),
+    level INTEGER DEFAULT 1,
+    xp INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT now(),
+    updated_at TIMESTAMP DEFAULT now()
 );
 
 
-
-CREATE TABLE user_profiles (
-    user_id UUID PRIMARY KEY REFERENCES users(id), -- Foydalanuvchi ID'si
-    first_name VARCHAR(50) NOT NULL, -- Ism
-    last_name VARCHAR(50) NOT NULL, -- Familiya
-    date_of_birth DATE, -- Tug'ilgan sana
-    gender VARCHAR(10), -- Jinsi
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- Yaratilgan sana
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- Yangilangan sana
-    deleted_at BIGINT DEFAULT 0
+CREATE TABLE refresh_tokens (
+    id UUID PRIMARY KEY,
+    token VARCHAR(400) UNIQUE NOT NULL,
+    user_id UUID NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
 );
 
-
-CREATE TABLE password_reset_tokens (
-    id UUID PRIMARY KEY, -- Token ID'si
-    user_id UUID REFERENCES users(id), -- Foydalanuvchi ID'si
-    token VARCHAR(255) NOT NULL, -- Parol tiklash tokeni
-    expires_at TIMESTAMP WITH TIME ZONE NOT NULL, -- Token amal qilish muddati
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP -- Yaratilgan sana
-);

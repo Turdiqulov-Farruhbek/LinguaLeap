@@ -6,30 +6,30 @@ services:
   migrate:
     image: migrate/migrate
     networks:
-      - GLhost
+      - mynetwork
     volumes:
       - ./migrations:/migrations
     command: [ "-path", "/migrations", "-database",  
-                "postgres://postgres:root@post-cont:5432/auth_db?sslmode=disable", 
+                "postgres://postgres:root@ppost-con:5432/learning_db?sslmode=disable", 
                 "up" ]
     depends_on:
       - postgres-db
 
   # Postgres Database
   postgres-db:
-    container_name: post-cont
+    container_name: post-con
     image: postgres:latest
     environment:
       PGUSER: postgres
       POSTGRES_PASSWORD: root
       # PGDATA: /data/postgres
-      POSTGRES_DB: auth_db
+      POSTGRES_DB: learning_db
     volumes:
       - db:/post-database/post-memory
     ports:
-      - "5433:5432"
+      - "5434:5432"
     networks:
-      - GLhost
+      - mynetwork
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d postgres"]
@@ -39,18 +39,18 @@ services:
 
   # Auth Service
   auth-service:
-    container_name: auth-service-cont
+    container_name: auth-service
     build: .
     depends_on:
       - postgres-db
     ports:
-      - "2121:2121"
+      - "8080:8080"
     networks:
-      - GLhost
+      - mynetwork
 
 # Docker Networks
 networks:
-  GLhost:
+  mynetwork:
     external: true
     name: global-network
     driver: bridge

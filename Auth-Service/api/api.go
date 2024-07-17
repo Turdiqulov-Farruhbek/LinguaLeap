@@ -1,26 +1,56 @@
 package api
 
 import (
-	"database/sql"
+	"log"
 
-	"auth/api/handler.go"
-	"auth/postgres"
+	"auth/api/handler"
+	_ "auth/docs"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
+	files "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func NewRouter(db *sql.DB) *gin.Engine {
-	router := gin.Default()
+// @title Auth Service
+// @description Auth service API documentation
+// @BasePath /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+func NewGin(h *handler.Handler) *gin.Engine {
+	ca, err := casbin.NewEnforcer("config/model.conf", "config/policy.csv")
+	if err != nil {
+		panic(err)
+	}
 
-	userRepo := postgres.NewUserRepo(db)
-	h := handler.NewHandler(db, userRepo)
-	router.GET("api/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	err = ca.LoadPolicy()
+	if err != nil {
+		log.Fatal("casbin error load policy: ", err)
+		panic(err)
+	}
 
-	router.POST("/register", h.Register)
-	router.POST("/login", h.Login)
-	router.GET("/users/:username", h.GetByUsername)
+	r := gin.Default()
 
-	return router
+	//r.Use(middleware.NewAuth(ca))
+	url := ginSwagger.URL("swagger/doc.json")
+	r.GET("api/swagger/*any", ginSwagger.WrapHandler(files.Handler, url))
+
+	a := r.Group("/auth")
+	{
+		a.POST("/register", h.Register)
+		a.POST("/login", h.Login)
+		a.POST("/logout", h.Logout)
+		a.POST("/forgot-password", h.ForgotPassword)
+		a.POST("/reset-password", h.ResetPassword)
+	}
+
+	u := r.Group("/user")
+	{
+		u.GET("/profile", h.GetProfile)
+		u.PUT("/profile", h.UpdateProfile)
+		u.PUT("/password", h.ChangePassword)
+	}
+
+	return r
 }

@@ -1,0 +1,372 @@
+basePath: /
+definitions:
+  auth.ForgotPasswordRequest:
+    properties:
+      email:
+        type: string
+    type: object
+  auth.ForgotPasswordResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  auth.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  auth.LoginResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+      token:
+        type: string
+    type: object
+  auth.LogoutRequest:
+    properties:
+      token:
+        type: string
+    type: object
+  auth.LogoutResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  auth.RegisterRequest:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      token:
+        type: string
+      username:
+        type: string
+    type: object
+  auth.RegisterResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+  auth.ResetPasswordRequest:
+    properties:
+      email:
+        type: string
+      email_password:
+        type: string
+      new_password:
+        type: string
+      username:
+        type: string
+    type: object
+  auth.ResetPasswordResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  user.ChangePasswordRequest:
+    properties:
+      current_password:
+        type: string
+      new_password:
+        type: string
+      token:
+        type: string
+    type: object
+  user.ChangePasswordResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  user.GetProfileResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: string
+      level:
+        type: integer
+      username:
+        type: string
+      xp:
+        type: integer
+    type: object
+  user.UpdateProfileRequest:
+    properties:
+      avatar_url:
+        type: string
+      full_name:
+        type: string
+      token:
+        type: string
+    type: object
+  user.UpdateProfileResponse:
+    properties:
+      avatar_url:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Auth service API documentation
+  title: Auth Service
+paths:
+  /auth/forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: Request password reset
+      parameters:
+      - description: Forgot password
+        in: body
+        name: ForgotPassword
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ForgotPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Password reset instructions sent
+          schema:
+            $ref: '#/definitions/auth.ForgotPasswordResponse'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Forgot password
+      tags:
+      - Auth
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login a user with username and password
+      parameters:
+      - description: Login user
+        in: body
+        name: Login
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/auth.LoginResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Login a user
+      tags:
+      - Auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout a user with token
+      parameters:
+      - description: Logout user
+        in: body
+        name: Logout
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LogoutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Logout successful
+          schema:
+            $ref: '#/definitions/auth.LogoutResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Logout a user
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with username, email, password, and full name
+      parameters:
+      - description: Register user
+        in: body
+        name: Register
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Registration successful
+          schema:
+            $ref: '#/definitions/auth.RegisterResponse'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Register a new user
+      tags:
+      - Auth
+  /auth/reset-password:
+    post:
+      consumes:
+      - application/json
+      description: Reset password with token and new password
+      parameters:
+      - description: Reset password
+        in: body
+        name: ResetPassword
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Password successfully reset
+          schema:
+            $ref: '#/definitions/auth.ResetPasswordResponse'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Reset password
+      tags:
+      - Auth
+  /user/password:
+    put:
+      consumes:
+      - application/json
+      description: Change user password
+      parameters:
+      - description: Change password
+        in: body
+        name: ChangePassword
+        required: true
+        schema:
+          $ref: '#/definitions/user.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Password changed
+          schema:
+            $ref: '#/definitions/user.ChangePasswordResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Change user password
+      tags:
+      - User
+  /user/profile:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve user profile information
+      parameters:
+      - description: Bearer Token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Profile retrieved
+          schema:
+            $ref: '#/definitions/user.GetProfileResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get user profile
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Update user profile information
+      parameters:
+      - description: Update profile
+        in: body
+        name: UpdateProfile
+        required: true
+        schema:
+          $ref: '#/definitions/user.UpdateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Profile updated
+          schema:
+            $ref: '#/definitions/user.UpdateProfileResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update user profile
+      tags:
+      - User
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
