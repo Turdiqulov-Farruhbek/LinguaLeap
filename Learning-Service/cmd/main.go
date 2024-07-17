@@ -32,6 +32,7 @@ func main() {
 	gen.RegisterUserServiceServer(server, srvc.NewUserService(db))
 
 	log.Println("Server is running on port :50020")
+
 	if err := server.Serve(liss); err != nil {
 		log.Fatalf("error listening: %v", err)
 	}
