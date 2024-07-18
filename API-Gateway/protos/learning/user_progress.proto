@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option go_package = "genprotos/learn";
+
+package languagelearning;
+
+// UserProgress xizmatini aniqlash
+service UserProgressService {
+    // Foydalanuvchi taraqqiyotini qo'shish uchun RPC
+    rpc AddUserProgress(AddUserProgressRequest) returns (AddUserProgressResponse);
+    // Foydalanuvchi taraqqiyotini olish uchun RPC
+    rpc GetUserProgress(GetUserProgressRequest) returns (GetUserProgressResponse);
+}
+
+// Foydalanuvchi taraqqiyotini qo'shish uchun xabar
+message AddUserProgressRequest {
+    string user_id = 1; // Foydalanuvchi ID'si
+    string language_id = 2; // Tilning UUID si
+    string lesson_id = 3; // Darsning UUID si
+    string exercise_id = 4; // Mashqning UUID si
+    string vocabulary_id = 5; // Leksika yozuvining UUID si
+    string completed_at = 6; // Tugatilgan vaqti
+}
+
+// Foydalanuvchi taraqqiyotini qo'shish javobi
+message AddUserProgressResponse {
+    // Bo'sh qoldirilgan, chunki muvaffaqiyatli yozuvni kiritganda javob berilmaydi
+}
+
+// Foydalanuvchi taraqqiyotini olish uchun xabar
+message GetUserProgressRequest {
+    string user_id = 1; // Foydalanuvchi ID'si
+}
+
+// Foydalanuvchi taraqqiyotini olish javobi
+message GetUserProgressResponse {
+    repeated UserProgress user_progress_list = 1; // Foydalanuvchi taraqqiyoti ro'yxati
+}
+
+// Foydalanuvchi taraqqiyoti haqida ma'lumotni aniqlash uchun xabar
+message UserProgress {
+    string user_id = 1; // Foydalanuvchi ID'si
+    string language_id = 2; // Tilning UUID si
+    string lesson_id = 3; // Darsning UUID si
+    string exercise_id = 4; // Mashqning UUID si
+    string vocabulary_id = 5; // Leksika yozuvining UUID si
+    string completed_at = 6; // Tugatilgan vaqti
+}

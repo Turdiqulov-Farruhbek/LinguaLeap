@@ -35,7 +35,7 @@ func (p *UserStorage) UpdateProfile(req *pb.UpdateProfileRequest) (*pb.UpdatePro
 	query := `
 		UPDATE users
 		SET full_name = $1, avatar_url = $2, updated_at = now()
-		WHERE id = $3
+		WHERE full_nime = $3
 		RETURNING id, username, email, full_name, avatar_url, updated_at
 	`
 	var profile pb.UpdateProfileResponse
@@ -53,9 +53,9 @@ func (p *UserStorage) ChangePassword(req *pb.ChangePasswordRequest) (*pb.ChangeP
 	query := `
 		UPDATE users
 		SET password_hash = $1, updated_at = now()
-		WHERE token = $2
+		WHERE id = $2
 	`
-	_, err := p.db.Exec(query, req.NewPassword, req.Token)
+	_, err := p.db.Exec(query, req.NewPassword, req.Id)
 	if err != nil {
 		return nil, err
 	}

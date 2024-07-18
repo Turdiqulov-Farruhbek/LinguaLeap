@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	ClientCon, err := grpc.NewClient(fmt.Sprintf("localhost%s", ":8088"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	ClientCon, err := grpc.NewClient(fmt.Sprintf("post-con%s", ":8088"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal("Error while NEwclient: ", err.Error())
 	}

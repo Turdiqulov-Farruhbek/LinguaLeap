@@ -1,0 +1,202 @@
+syntax = "proto3";
+
+package progress;
+
+option go_package = "genprotos/progres";
+
+
+service ProgressService {
+    rpc SetGoal(Goal) returns (GoalResponse); // Maqsadni belgilash
+    rpc UpdateGoal(UpdateGoalRequest) returns (GoalResponse); // Maqsadni yangilash
+    rpc GetLanguageProgress(GetLanguageProgressRequest) returns (ProgressResponse); // Til progressini olish
+    rpc GetDailyProgress(GetUserRequest) returns (DailyProgressResponse); // Kunlik progressni olish
+    rpc GetWeeklyProgress(GetUserRequest) returns (WeeklyProgressResponse); // Haftalik progressni olish
+    rpc GetMonthlyProgress(GetUserRequest) returns (MonthlyProgressResponse); // Oylik progressni olish
+    rpc GetAchievements(GetUserRequest) returns (AchievementsResponse); // Yutuqlarni olish
+    rpc GetLeaderboard(GetLeaderboardRequest) returns (LeaderboardResponse); // Liderlar jadvalini olish
+    rpc GetSkills(GetSkillsRequest) returns (SkillsResponse); // Ko'nikmalarni olish
+    rpc GetGoals(GetUserRequest) returns (GoalsResponse); // Maqsadlarni olish
+    rpc GetStatistics(GetStatisticsRequest) returns (StatisticsResponse); // Statistikani olish
+    rpc DeleteGoal(DeleteGoalRequest) returns (GoalResponse); // Maqsadni o'chirish
+}
+
+// Maqsadlar Protobuf xabari
+message Goal {
+    string id = 1; // Maqsad ID'si
+    string user_id = 2; // Foydalanuvchi ID'si
+    string language_code = 3; // Til kodi (masalan, 'fr', 'es', va hokazo)
+    string goal_type = 4; // Maqsad turi (masalan, 'daily_xp', 'weekly_lessons', va hokazo)
+    int32 target_value = 5; // Maqsad uchun kerakli qiymat
+    int32 current_value = 6; // Hozirgi qiymat
+    string start_date = 7; // Maqsad boshlanish sanasi
+    string end_date = 8; // Maqsad tugash sanasi
+    string created_at = 9; // Maqsad yaratilgan sana
+    string updated_at = 10; // Maqsad yangilangan sanaa
+}
+
+// Kunlik progress Protobuf xabari
+message DailyProgress {
+    string id = 1; // Kunlik progress ID'si
+    string user_id = 2; // Foydalanuvchi ID'si
+    string date = 3; // Sana
+    int32 xp_earned = 4; // Kunlik XP miqdori
+    int32 lessons_completed = 5; // Bajarilgan darslar soni
+    int32 new_words_learned = 6; // O'rganilgan yangi so'zlar soni
+    int32 minutes_practiced = 7; // Mashq qilingan daqiqalar
+    int32 streak_days = 8; // Kunlik davomiylik kunlari
+    string created_at = 9; // Progress yaratilgan sana
+}
+
+// Haftalik progress Protobuf xabari
+message WeeklyProgress {
+    string id = 1; // Haftalik progress ID'si
+    string user_id = 2; // Foydalanuvchi ID'si
+    string week_start = 3; // Haftaning boshlanish sanasi
+    string week_end = 4; // Haftaning tugash sanasi
+    int32 total_xp_earned = 5; // Haftalik umumiy XP miqdori
+    int32 lessons_completed = 6; // Bajarilgan darslar soni
+    int32 new_words_learned = 7; // O'rganilgan yangi so'zlar soni
+    int32 total_minutes_practiced = 8; // Mashq qilingan umumiy daqiqalar
+    string most_active_day = 9; // Eng faol kun
+    string created_at = 10; // Progress yaratilgan sana
+}
+
+// Oylik progress Protobuf xabari
+message MonthlyProgress {
+    string id = 1; // Oylik progress ID'si
+    string user_id = 2; // Foydalanuvchi ID'si
+    string month = 3; // Oy
+    int32 total_xp_earned = 4; // Oylik umumiy XP miqdori
+    int32 lessons_completed = 5; // Bajarilgan darslar soni
+    int32 new_words_learned = 6; // O'rganilgan yangi so'zlar soni
+    int32 total_minutes_practiced = 7; // Mashq qilingan umumiy daqiqalar
+    string most_improved_skill = 8; // Eng ko'p rivojlangan ko'nikma
+    string created_at = 9; // Progress yaratilgan sana
+}
+
+// Yutuqlar Protobuf xabari
+message Achievement {
+    string id = 1; // Yutuq ID'si
+    string user_id = 2; // Foydalanuvchi ID'si
+    string title = 3; // Yutuq nomi
+    string description = 4; // Yutuq ta'rifi
+    string earned_at = 5; // Yutuq erishilgan sana
+    string created_at = 6; // Yutuq yaratilgan sana
+}
+
+// Liderlar Protobuf xabari
+message Leaderboard {
+    string id = 1; // Liderlar jadvali ID'si
+    string user_id = 2; // Foydalanuvchi ID'si
+    string language_code = 3; // Til kodi
+    int32 rank = 4; // O'rin
+    int32 xp = 5; // XP miqdori
+    string level = 6; // Daraja
+    string created_at = 7; // Jadval yaratilgan sana
+}
+
+// Ko'nikmalar Protobuf xabari
+message Skill {
+    string id = 1; // Ko'nikma ID'si
+    string user_id = 2; // Foydalanuvchi ID'si
+    string language_code = 3; // Til kodi
+    string name = 4; // Ko'nikma nomi (masalan, 'Vocabulary', 'Grammar', 'Listening', va hokazo)
+    int32 level = 5; // Ko'nikma darajasi
+    int32 progress_to_next_level = 6; // Keyingi darajaga o'tish uchun progress
+    int32 words_learned = 7; // O'rganilgan so'zlar soni
+    int32 rules_mastered = 8; // Egallangan qoidalar soni
+    int32 comprehension_rate = 9; // Tinglab tushunish darajasi
+    int32 fluency_rate = 10; // So'zlashuv ravonligi darajasi
+    string created_at = 11; // Ko'nikma yaratilgan sana
+}
+
+// Statistika Protobuf xabari
+message Statistic {
+    string id = 1; // Statistika ID'si
+    string user_id = 2; // Foydalanuvchi ID'si
+    string language_code = 3; // Til kodi
+    int32 total_learning_time = 4; // Umumiy o'qish vaqti (daqiqalarda)
+    int32 average_daily_time = 5; // O'rtacha kunlik o'qish vaqti (daqiqalarda)
+    int32 total_lessons_completed = 6; // Bajarilgan umumiy darslar soni
+    int32 total_exercises_completed = 7; // Bajarilgan umumiy mashqlar soni
+    int32 accuracy_rate = 8; // Aniqlik darajasi (%)
+    string most_challenging_skill = 9; // Eng qiyin ko'nikma
+    string strongest_skill = 10; // Eng kuchli ko'nikma
+    string created_at = 11; // Statistika yaratilgan sana
+}
+
+message GoalResponse {
+    Goal goal = 1;
+}
+
+message UpdateGoalRequest {
+    string goal_id = 1;
+    Goal goal = 2;
+}
+
+message GetLanguageProgressRequest {
+    string user_id = 1;
+    string language_code = 2;
+}
+
+message ProgressResponse {
+    repeated DailyProgress daily_progress = 1;
+    repeated WeeklyProgress weekly_progress = 2;
+    repeated MonthlyProgress monthly_progress = 3;
+}
+
+message GetUserRequest {
+    string user_id = 1;
+}
+
+message DailyProgressResponse {
+    repeated DailyProgress progress = 1;
+}
+
+message WeeklyProgressResponse {
+    repeated WeeklyProgress progress = 1;
+}
+
+message MonthlyProgressResponse {
+    repeated MonthlyProgress progress = 1;
+}
+
+message AchievementsResponse {
+    repeated Achievement achievements = 1;
+}
+
+message GetLeaderboardRequest {
+    string user_id = 1;
+    string language_code = 2;
+}
+
+message LeaderboardResponse {
+    repeated Leaderboard leaderboards = 1;
+}
+
+message GetSkillsRequest {
+    string user_id = 1;
+    string language_code = 2;
+}
+
+message SkillsResponse {
+    repeated Skill skills = 1;
+}
+
+message GoalsResponse {
+    repeated Goal goals = 1;
+}
+
+message GetStatisticsRequest {
+    string user_id = 1;
+    string language_code = 2;
+}
+
+message StatisticsResponse {
+    repeated Statistic statistics = 1;
+}
+
+message DeleteGoalRequest {
+    string goal_id = 1;
+}
+   

@@ -5,7 +5,7 @@ import (
 )
 
 var (
-    AuthServiceURL       = getEnv("AUTH_SERVICE_URL", "http://localhost:2121")
+    AuthServiceURL       = getEnv("AUTH_SERVICE_URL", "http://localhost:8088")
     LibraryServiceURL = getEnv("LIBRARY_SERVICE_URL", "http://localhost:50020")
 )
 

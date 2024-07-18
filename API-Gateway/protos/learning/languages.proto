@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+option go_package = "genprotos/learn";
+
+package languagelearning;
+
+// Language xizmatini aniqlash
+service LanguageService {
+    // Til haqida ma'lumot olish uchun RPC
+    rpc GetLanguage(GetLanguageRequest) returns (GetLanguageResponse);
+    // Barcha tillar ro'yxatini olish uchun RPC
+    rpc ListLanguages(ListLanguagesRequest) returns (ListLanguagesResponse);
+    // Tilni yaratish uchun RPC
+    rpc CreateLanguage(CreateLanguageRequest) returns (CreateLanguageResponse);
+    // Tilni yangilash uchun RPC
+    rpc UpdateLanguage(UpdateLanguageRequest) returns (UpdateLanguageResponse);
+    // Tilni o'chirish uchun RPC
+    rpc DeleteLanguage(DeleteLanguageRequest) returns (DeleteLanguageResponse);
+}
+
+// Tilni so'rash uchun xabar
+message GetLanguageRequest {
+    string id = 1; // Tilning UUID si
+}
+
+// Til haqida ma'lumotni javob qilish uchun xabar
+message GetLanguageResponse {
+    Language language = 1; // Til haqida ma'lumot
+}
+
+// Barcha tillarni so'rash uchun xabar
+message ListLanguagesRequest {}
+
+// Barcha tillarni javob qilish uchun xabar
+message ListLanguagesResponse {
+    repeated Language languages = 1; // Tillarning ro'yxati
+}
+
+// Til yaratish uchun xabar
+message CreateLanguageRequest {
+    string language_code = 1; // Til kodi, masalan, 'en', 'uz'
+    string name = 2; // Til nomi, masalan, 'Ingliz tili', 'O'zbek tili'
+    string emoji = 3; // Til flag emojisi
+}
+
+// Til yaratish javobi
+message CreateLanguageResponse {
+    Language language = 1; // Yaratilgan til haqida ma'lumot
+}
+
+// Tilni yangilash uchun xabar
+message UpdateLanguageRequest {
+    string id = 1; // Tilning UUID si
+    string language_code = 2; // Til kodi, masalan, 'en', 'uz'
+    string name = 3; // Til nomi, masalan, 'Ingliz tili', 'O'zbek tili'
+    string emoji = 4; // Til flag emojisi
+
+}
+
+// Tilni yangilash javobi
+message UpdateLanguageResponse {
+    Language language = 1; // Yangilangan til haqida ma'lumot
+}
+
+// Tilni o'chirish uchun xabar
+message DeleteLanguageRequest {
+    string id = 1; // Tilning UUID si
+}
+
+// Tilni o'chirish javobi
+message DeleteLanguageResponse {
+    string id = 1; // O'chirilgan tilning UUID si
+}
+
+// Til haqida ma'lumotni aniqlash uchun xabar
+message Language {
+    string id = 1; // Tilning UUID si
+    string language_code = 2; // Til kodi, masalan, 'en', 'uz'
+    string name = 3; // Til nomi, masalan, 'Ingliz tili', 'O'zbek tili'
+    string emoji = 4; // Til flag emojisi
+    string created_at = 5; 
+    string updated_at = 6; // Yangilangan vaqti
+}

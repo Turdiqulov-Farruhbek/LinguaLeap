@@ -497,6 +497,9 @@ const docTemplate = `{
                 "current_password": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "string"
+                },
                 "new_password": {
                     "type": "string"
                 },

@@ -1,0 +1,964 @@
+basePath: /
+definitions:
+  learn.AddVocabularyRequest:
+    properties:
+      language_code:
+        description: Til kodi, masalan, 'en', 'uz'
+        type: string
+      translation:
+        description: So'z tarjimasi
+        type: string
+      word:
+        description: So'z
+        type: string
+    type: object
+  learn.AddVocabularyResponse:
+    properties:
+      id:
+        description: Yaratilgan leksika yozuving UUID si
+        type: string
+    type: object
+  learn.CreateLanguageRequest:
+    properties:
+      emoji:
+        description: Til flag emojisi
+        type: string
+      language_code:
+        description: Til kodi, masalan, 'en', 'uz'
+        type: string
+      name:
+        description: Til nomi, masalan, 'Ingliz tili', 'O'zbek tili'
+        type: string
+    type: object
+  learn.CreateLanguageResponse:
+    properties:
+      language:
+        allOf:
+        - $ref: '#/definitions/learn.Language'
+        description: Yaratilgan til haqida ma'lumot
+    type: object
+  learn.GetLanguageResponse:
+    properties:
+      language:
+        allOf:
+        - $ref: '#/definitions/learn.Language'
+        description: Til haqida ma'lumot
+    type: object
+  learn.GetLessonRequest:
+    properties:
+      id:
+        description: Darsning UUID si
+        type: string
+    type: object
+  learn.GetLessonResponse:
+    properties:
+      lesson:
+        allOf:
+        - $ref: '#/definitions/learn.Lesson'
+        description: Dars haqida ma'lumot
+    type: object
+  learn.GetQuestionRequest:
+    properties:
+      id:
+        description: Savolning UUID si
+        type: string
+    type: object
+  learn.GetQuestionResponse:
+    properties:
+      question:
+        allOf:
+        - $ref: '#/definitions/learn.Question'
+        description: Savol haqida ma'lumot
+    type: object
+  learn.GetVocabularyResponse:
+    properties:
+      vocabulary:
+        allOf:
+        - $ref: '#/definitions/learn.Vocabulary'
+        description: Leksika yozuvi haqida ma'lumot
+    type: object
+  learn.Language:
+    properties:
+      created_at:
+        type: string
+      emoji:
+        description: Til flag emojisi
+        type: string
+      id:
+        description: Tilning UUID si
+        type: string
+      language_code:
+        description: Til kodi, masalan, 'en', 'uz'
+        type: string
+      name:
+        description: Til nomi, masalan, 'Ingliz tili', 'O'zbek tili'
+        type: string
+      updated_at:
+        description: Yangilangan vaqti
+        type: string
+    type: object
+  learn.Lesson:
+    properties:
+      content:
+        type: string
+      created_at:
+        description: Dars yaratilgan vaqti
+        type: string
+      id:
+        description: Darsning UUID si
+        type: string
+      language_code:
+        description: Til kodi, masalan, 'en', 'uz'
+        type: string
+      level:
+        description: Dars darajasi, masalan, 'boshlang'ich', 'o'rta', 'yuqori'
+        type: string
+      title:
+        description: Dars nomi
+        type: string
+      updated_at:
+        description: Dars yangilangan vaqti
+        type: string
+    type: object
+  learn.Question:
+    properties:
+      correct_answer:
+        description: To'g'ri javob
+        type: string
+      created_at:
+        description: Yaratilgan vaqti
+        type: string
+      difficulty:
+        description: Qiyinlik darajasi
+        type: string
+      explanation:
+        description: Javob izohi
+        type: string
+      id:
+        description: Savolning UUID si
+        type: string
+      language_code:
+        description: Til kodi, masalan, 'en', 'uz'
+        type: string
+      options:
+        description: Javob variantlari
+        items:
+          type: string
+        type: array
+      question:
+        description: Savol matni
+        type: string
+      type:
+        description: Savol turi
+        type: string
+    type: object
+  learn.Vocabulary:
+    properties:
+      created_at:
+        description: Yaratilgan vaqti
+        type: string
+      id:
+        description: Leksika yozuving UUID si
+        type: string
+      language_code:
+        description: Til kodi, masalan, 'en', 'uz'
+        type: string
+      translation:
+        description: So'z tarjimasi
+        type: string
+      updated_at:
+        description: Yangilangan vaqti
+        type: string
+      word:
+        description: So'z
+        type: string
+    type: object
+  progres.Achievement:
+    properties:
+      created_at:
+        description: Yutuq yaratilgan sana
+        type: string
+      description:
+        description: Yutuq ta'rifi
+        type: string
+      earned_at:
+        description: Yutuq erishilgan sana
+        type: string
+      id:
+        description: Yutuq ID'si
+        type: string
+      title:
+        description: Yutuq nomi
+        type: string
+      user_id:
+        description: Foydalanuvchi ID'si
+        type: string
+    type: object
+  progres.AchievementsResponse:
+    properties:
+      achievements:
+        items:
+          $ref: '#/definitions/progres.Achievement'
+        type: array
+    type: object
+  progres.DailyProgress:
+    properties:
+      created_at:
+        description: Progress yaratilgan sana
+        type: string
+      date:
+        description: Sana
+        type: string
+      id:
+        description: Kunlik progress ID'si
+        type: string
+      lessons_completed:
+        description: Bajarilgan darslar soni
+        type: integer
+      minutes_practiced:
+        description: Mashq qilingan daqiqalar
+        type: integer
+      new_words_learned:
+        description: O'rganilgan yangi so'zlar soni
+        type: integer
+      streak_days:
+        description: Kunlik davomiylik kunlari
+        type: integer
+      user_id:
+        description: Foydalanuvchi ID'si
+        type: string
+      xp_earned:
+        description: Kunlik XP miqdori
+        type: integer
+    type: object
+  progres.DailyProgressResponse:
+    properties:
+      progress:
+        items:
+          $ref: '#/definitions/progres.DailyProgress'
+        type: array
+    type: object
+  progres.Goal:
+    properties:
+      created_at:
+        description: Maqsad yaratilgan sana
+        type: string
+      current_value:
+        description: Hozirgi qiymat
+        type: integer
+      end_date:
+        description: Maqsad tugash sanasi
+        type: string
+      goal_type:
+        description: Maqsad turi (masalan, 'daily_xp', 'weekly_lessons', va hokazo)
+        type: string
+      id:
+        description: Maqsad ID'si
+        type: string
+      language_code:
+        description: Til kodi (masalan, 'fr', 'es', va hokazo)
+        type: string
+      start_date:
+        description: Maqsad boshlanish sanasi
+        type: string
+      target_value:
+        description: Maqsad uchun kerakli qiymat
+        type: integer
+      updated_at:
+        description: Maqsad yangilangan sanaa
+        type: string
+      user_id:
+        description: Foydalanuvchi ID'si
+        type: string
+    type: object
+  progres.GoalResponse:
+    properties:
+      goal:
+        $ref: '#/definitions/progres.Goal'
+    type: object
+  progres.GoalsResponse:
+    properties:
+      goals:
+        items:
+          $ref: '#/definitions/progres.Goal'
+        type: array
+    type: object
+  progres.Leaderboard:
+    properties:
+      created_at:
+        description: Jadval yaratilgan sana
+        type: string
+      id:
+        description: Liderlar jadvali ID'si
+        type: string
+      language_code:
+        description: Til kodi
+        type: string
+      level:
+        description: Daraja
+        type: string
+      rank:
+        description: O'rin
+        type: integer
+      user_id:
+        description: Foydalanuvchi ID'si
+        type: string
+      xp:
+        description: XP miqdori
+        type: integer
+    type: object
+  progres.LeaderboardResponse:
+    properties:
+      leaderboards:
+        items:
+          $ref: '#/definitions/progres.Leaderboard'
+        type: array
+    type: object
+  progres.MonthlyProgress:
+    properties:
+      created_at:
+        description: Progress yaratilgan sana
+        type: string
+      id:
+        description: Oylik progress ID'si
+        type: string
+      lessons_completed:
+        description: Bajarilgan darslar soni
+        type: integer
+      month:
+        description: Oy
+        type: string
+      most_improved_skill:
+        description: Eng ko'p rivojlangan ko'nikma
+        type: string
+      new_words_learned:
+        description: O'rganilgan yangi so'zlar soni
+        type: integer
+      total_minutes_practiced:
+        description: Mashq qilingan umumiy daqiqalar
+        type: integer
+      total_xp_earned:
+        description: Oylik umumiy XP miqdori
+        type: integer
+      user_id:
+        description: Foydalanuvchi ID'si
+        type: string
+    type: object
+  progres.MonthlyProgressResponse:
+    properties:
+      progress:
+        items:
+          $ref: '#/definitions/progres.MonthlyProgress'
+        type: array
+    type: object
+  progres.ProgressResponse:
+    properties:
+      daily_progress:
+        items:
+          $ref: '#/definitions/progres.DailyProgress'
+        type: array
+      monthly_progress:
+        items:
+          $ref: '#/definitions/progres.MonthlyProgress'
+        type: array
+      weekly_progress:
+        items:
+          $ref: '#/definitions/progres.WeeklyProgress'
+        type: array
+    type: object
+  progres.Skill:
+    properties:
+      comprehension_rate:
+        description: Tinglab tushunish darajasi
+        type: integer
+      created_at:
+        description: Ko'nikma yaratilgan sana
+        type: string
+      fluency_rate:
+        description: So'zlashuv ravonligi darajasi
+        type: integer
+      id:
+        description: Ko'nikma ID'si
+        type: string
+      language_code:
+        description: Til kodi
+        type: string
+      level:
+        description: Ko'nikma darajasi
+        type: integer
+      name:
+        description: Ko'nikma nomi (masalan, 'Vocabulary', 'Grammar', 'Listening',
+          va hokazo)
+        type: string
+      progress_to_next_level:
+        description: Keyingi darajaga o'tish uchun progress
+        type: integer
+      rules_mastered:
+        description: Egallangan qoidalar soni
+        type: integer
+      user_id:
+        description: Foydalanuvchi ID'si
+        type: string
+      words_learned:
+        description: O'rganilgan so'zlar soni
+        type: integer
+    type: object
+  progres.SkillsResponse:
+    properties:
+      skills:
+        items:
+          $ref: '#/definitions/progres.Skill'
+        type: array
+    type: object
+  progres.Statistic:
+    properties:
+      accuracy_rate:
+        description: Aniqlik darajasi (%)
+        type: integer
+      average_daily_time:
+        description: O'rtacha kunlik o'qish vaqti (daqiqalarda)
+        type: integer
+      created_at:
+        description: Statistika yaratilgan sana
+        type: string
+      id:
+        description: Statistika ID'si
+        type: string
+      language_code:
+        description: Til kodi
+        type: string
+      most_challenging_skill:
+        description: Eng qiyin ko'nikma
+        type: string
+      strongest_skill:
+        description: Eng kuchli ko'nikma
+        type: string
+      total_exercises_completed:
+        description: Bajarilgan umumiy mashqlar soni
+        type: integer
+      total_learning_time:
+        description: Umumiy o'qish vaqti (daqiqalarda)
+        type: integer
+      total_lessons_completed:
+        description: Bajarilgan umumiy darslar soni
+        type: integer
+      user_id:
+        description: Foydalanuvchi ID'si
+        type: string
+    type: object
+  progres.StatisticsResponse:
+    properties:
+      statistics:
+        items:
+          $ref: '#/definitions/progres.Statistic'
+        type: array
+    type: object
+  progres.UpdateGoalRequest:
+    properties:
+      goal:
+        $ref: '#/definitions/progres.Goal'
+      goal_id:
+        type: string
+    type: object
+  progres.WeeklyProgress:
+    properties:
+      created_at:
+        description: Progress yaratilgan sana
+        type: string
+      id:
+        description: Haftalik progress ID'si
+        type: string
+      lessons_completed:
+        description: Bajarilgan darslar soni
+        type: integer
+      most_active_day:
+        description: Eng faol kun
+        type: string
+      new_words_learned:
+        description: O'rganilgan yangi so'zlar soni
+        type: integer
+      total_minutes_practiced:
+        description: Mashq qilingan umumiy daqiqalar
+        type: integer
+      total_xp_earned:
+        description: Haftalik umumiy XP miqdori
+        type: integer
+      user_id:
+        description: Foydalanuvchi ID'si
+        type: string
+      week_end:
+        description: Haftaning tugash sanasi
+        type: string
+      week_start:
+        description: Haftaning boshlanish sanasi
+        type: string
+    type: object
+  progres.WeeklyProgressResponse:
+    properties:
+      progress:
+        items:
+          $ref: '#/definitions/progres.WeeklyProgress'
+        type: array
+    type: object
+info:
+  contact: {}
+  description: API for managing LinguaLeap System resources
+  version: "1.0"
+paths:
+  /languages:
+    get:
+      description: Get a list of languages
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/learn.GetLanguageResponse'
+      summary: Get languages
+      tags:
+      - languages
+  /languages/exercise/{exercise_id}/submit:
+    post:
+      consumes:
+      - application/json
+      description: Submit an exercise for evaluation
+      parameters:
+      - description: Exercise ID
+        in: path
+        name: exercise_id
+        required: true
+        type: string
+      - description: Submit Exercise
+        in: body
+        name: submit
+        required: true
+        schema:
+          $ref: '#/definitions/learn.GetQuestionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/learn.GetQuestionResponse'
+      summary: Submit an exercise
+      tags:
+      - languages
+  /languages/exercises/{language_code}:
+    get:
+      description: Get exercises for a language
+      parameters:
+      - description: Language Code
+        in: path
+        name: language_code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/learn.GetQuestionResponse'
+      summary: Get exercises
+      tags:
+      - languages
+  /languages/lesson/{lesson_id}:
+    get:
+      description: Get details for a specific lesson
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lesson_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/learn.GetLessonResponse'
+      summary: Get lesson details
+      tags:
+      - languages
+  /languages/lesson/{lesson_id}/complete:
+    post:
+      consumes:
+      - application/json
+      description: Mark a lesson as completed
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lesson_id
+        required: true
+        type: string
+      - description: Complete Lesson
+        in: body
+        name: complete
+        required: true
+        schema:
+          $ref: '#/definitions/learn.GetLessonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/learn.GetLessonResponse'
+      summary: Complete a lesson
+      tags:
+      - languages
+  /languages/lessons/{language_code}:
+    get:
+      description: Get lessons for a language
+      parameters:
+      - description: Language Code
+        in: path
+        name: language_code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/learn.GetLessonResponse'
+      summary: Get lessons
+      tags:
+      - languages
+  /languages/start:
+    post:
+      consumes:
+      - application/json
+      description: Start learning a language
+      parameters:
+      - description: Start Learning Language
+        in: body
+        name: start
+        required: true
+        schema:
+          $ref: '#/definitions/learn.CreateLanguageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/learn.CreateLanguageResponse'
+      summary: Start learning a language
+      tags:
+      - languages
+  /languages/vocabulary/{language_code}:
+    get:
+      description: Get vocabulary for a language
+      parameters:
+      - description: Language Code
+        in: path
+        name: language_code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/learn.GetVocabularyResponse'
+      summary: Get vocabulary
+      tags:
+      - languages
+  /languages/vocabulary/{language_code}/add:
+    post:
+      consumes:
+      - application/json
+      description: Add new vocabulary to a language
+      parameters:
+      - description: Language Code
+        in: path
+        name: language_code
+        required: true
+        type: string
+      - description: Add Vocabulary
+        in: body
+        name: vocabulary
+        required: true
+        schema:
+          $ref: '#/definitions/learn.AddVocabularyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/learn.AddVocabularyResponse'
+      summary: Add vocabulary
+      tags:
+      - languages
+  /progress/{language_code}:
+    get:
+      description: Get the user's progress for a specific language
+      parameters:
+      - description: Language Code
+        in: path
+        name: language_code
+        required: true
+        type: string
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/progres.ProgressResponse'
+      summary: Get language progress
+      tags:
+      - progress
+  /progress/achievements:
+    get:
+      description: Get the user's achievements
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/progres.AchievementsResponse'
+      summary: Get achievements
+      tags:
+      - progress
+  /progress/daily:
+    get:
+      description: Get the user's daily progress
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/progres.DailyProgressResponse'
+      summary: Get daily progress
+      tags:
+      - progress
+  /progress/delete-goal/{goal_id}:
+    delete:
+      description: Delete an existing goal
+      parameters:
+      - description: Goal ID
+        in: path
+        name: goal_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/progres.GoalResponse'
+      summary: Delete a goal
+      tags:
+      - progress
+  /progress/goals:
+    get:
+      description: Get the user's goals
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/progres.GoalsResponse'
+      summary: Get goals
+      tags:
+      - progress
+  /progress/leaderboard/{language_code}:
+    get:
+      description: Get the leaderboard for a specific language
+      parameters:
+      - description: Language Code
+        in: path
+        name: language_code
+        required: true
+        type: string
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/progres.LeaderboardResponse'
+      summary: Get leaderboard
+      tags:
+      - progress
+  /progress/monthly:
+    get:
+      description: Get the user's monthly progress
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/progres.MonthlyProgressResponse'
+      summary: Get monthly progress
+      tags:
+      - progress
+  /progress/set-goal:
+    post:
+      consumes:
+      - application/json
+      description: Set a new goal for the user
+      parameters:
+      - description: Set Goal
+        in: body
+        name: goal
+        required: true
+        schema:
+          $ref: '#/definitions/progres.Goal'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/progres.GoalResponse'
+      summary: Set a goal
+      tags:
+      - progress
+  /progress/skills/{language_code}:
+    get:
+      description: Get the user's skills for a specific language
+      parameters:
+      - description: Language Code
+        in: path
+        name: language_code
+        required: true
+        type: string
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/progres.SkillsResponse'
+      summary: Get skills
+      tags:
+      - progress
+  /progress/statistics/{language_code}:
+    get:
+      description: Get the user's statistics for a specific language
+      parameters:
+      - description: Language Code
+        in: path
+        name: language_code
+        required: true
+        type: string
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/progres.StatisticsResponse'
+      summary: Get statistics
+      tags:
+      - progress
+  /progress/update-goal/{goal_id}:
+    put:
+      consumes:
+      - application/json
+      description: Update an existing goal for the user
+      parameters:
+      - description: Goal ID
+        in: path
+        name: goal_id
+        required: true
+        type: string
+      - description: Update Goal
+        in: body
+        name: goal
+        required: true
+        schema:
+          $ref: '#/definitions/progres.UpdateGoalRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/progres.GoalResponse'
+      summary: Update a goal
+      tags:
+      - progress
+  /progress/weekly:
+    get:
+      description: Get the user's weekly progress
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/progres.WeeklyProgressResponse'
+      summary: Get weekly progress
+      tags:
+      - progress
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

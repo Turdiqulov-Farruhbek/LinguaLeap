@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+option go_package = "genprotos/learn";
+
+package languagelearning;
+
+// Lesson xizmatini aniqlash
+service LessonService {
+    // Dars yaratish uchun RPC
+    rpc CreateLesson(CreateLessonRequest) returns (CreateLessonResponse);
+    // Dars haqida ma'lumot olish uchun RPC
+    rpc GetLesson(GetLessonRequest) returns (GetLessonResponse);
+    // Barcha darslar ro'yxatini olish uchun RPC
+    rpc ListLessons(ListLessonsRequest) returns (ListLessonsResponse);
+    // Darsni yangilash uchun RPC
+    rpc UpdateLesson(UpdateLessonRequest) returns (UpdateLessonResponse);
+    // Darsni o'chirish uchun RPC
+    rpc DeleteLesson(DeleteLessonRequest) returns (DeleteLessonResponse);
+}
+
+// Dars yaratish uchun xabar
+message CreateLessonRequest {
+    string language_code = 1; // Til kodi, masalan, 'en', 'uz'
+    string title = 2; // Dars nomi
+    string level = 3; // Dars darajasi, masalan, 'boshlang'ich', 'o'rta', 'yuqori'
+}
+
+// Dars yaratish javobi
+message CreateLessonResponse {
+    string id = 1; // Yaratilgan darsning UUID si
+}
+
+// Dars haqida ma'lumot so'rash uchun xabar
+message GetLessonRequest {
+    string id = 1; // Darsning UUID si
+}
+
+// Dars haqida ma'lumot javobi
+message GetLessonResponse {
+    Lesson lesson = 1; // Dars haqida ma'lumot
+}
+
+// Barcha darslar ro'yxatini so'rash uchun xabar
+message ListLessonsRequest {}
+
+// Barcha darslar ro'yxatini javobi
+message ListLessonsResponse {
+    repeated Lesson lessons = 1; // Darslarning ro'yxati
+}
+
+// Darsni yangilash uchun xabar
+message UpdateLessonRequest {
+    string id = 1; // Darsning UUID si
+    string language_code = 2; // Til kodi, masalan, 'en', 'uz'
+    string title = 3; // Dars nomi
+    string level = 4; // Dars darajasi, masalan, 'boshlang'ich', 'o'rta', 'yuqori'
+    string UpdatedAt = 5; 
+}
+
+// Darsni yangilash javobi
+message UpdateLessonResponse {
+    Lesson lesson = 1; // Yangilangan dars haqida ma'lumot
+}
+
+// Darsni o'chirish uchun xabar
+message DeleteLessonRequest {
+    string id = 1; // Darsning UUID si
+}
+
+// Darsni o'chirish javobi
+message DeleteLessonResponse {
+    string id = 1; // O'chirilgan darsning UUID si
+}
+
+
+
+// Dars haqida ma'lumotni aniqlash uchun xabar
+message Lesson {
+    string id = 1; // Darsning UUID si
+    string language_code = 2; // Til kodi, masalan, 'en', 'uz'
+    string title = 3; // Dars nomi
+    string level = 4; // Dars darajasi, masalan, 'boshlang'ich', 'o'rta', 'yuqori'
+    string content = 5; //
+    string created_at = 6; // Dars yaratilgan vaqti
+    string updated_at = 7; // Dars yangilangan vaqti
+}

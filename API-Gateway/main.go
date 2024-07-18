@@ -1,10 +1,9 @@
 package main
 
 import (
-	"getway/api"
 	"log/slog"
+	"gateway/api"
 
-	// _ "api-getway/docs"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -12,7 +11,7 @@ import (
 
 func main() {
 	// Set up gRPC connections
-	libraryConn, err := grpc.NewClient("lib-service-cont:50020", grpc.WithTransportCredentials(insecure.NewCredentials())) // Update the address
+	libraryConn, err := grpc.NewClient("learning-service-cont:50020", grpc.WithTransportCredentials(insecure.NewCredentials())) // Update the address
 	if err != nil {
 		slog.Error("Failed to connect to libraryConn service %v")
 	}
@@ -21,7 +20,7 @@ func main() {
 	router := api.NewGin(libraryConn)
 	// fmt.Println("API Gateway running on http://localhost:50020")
 	if err := router.Run(":8000"); err != nil {
-		slog.Error("Failed to connect to gin engine: %v", err)
+		slog.Error("Failed to connect to gin engine: %v")
 	}
 
 }

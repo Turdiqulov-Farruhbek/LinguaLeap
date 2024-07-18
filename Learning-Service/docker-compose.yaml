@@ -26,7 +26,7 @@ services:
     volumes:
       - db:/post-database/post-memory
     ports:
-      - "5434:5432"
+      - "5439:5432"
     networks:
       - GLhost
     restart: unless-stopped
@@ -64,6 +64,7 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - postgres-db
+      - mongodb
     ports:
       - "50020:50020"
     networks:

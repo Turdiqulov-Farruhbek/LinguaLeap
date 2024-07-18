@@ -10,7 +10,7 @@ services:
     volumes:
       - ./migrations:/migrations
     command: [ "-path", "/migrations", "-database",  
-                "postgres://postgres:root@ppost-con:5432/learning_db?sslmode=disable", 
+                "postgres://postgres:root@post-con:5432/learning_db?sslmode=disable", 
                 "up" ]
     depends_on:
       - postgres-db
@@ -27,7 +27,7 @@ services:
     volumes:
       - db:/post-database/post-memory
     ports:
-      - "5434:5432"
+      - "5438:5432"
     networks:
       - mynetwork
     restart: unless-stopped

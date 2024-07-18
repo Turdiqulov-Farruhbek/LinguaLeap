@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+option go_package = "genprotos/learn";
+
+
+package languagelearning;
+
+// UserService xizmatini aniqlash
+service UserService {
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+    rpc GetUsers(GetUserReq) returns (GetUserResponse);
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+    rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+}
+
+// Foydalanuvchi haqida ma'lumotni aniqlash uchun xabar
+message User {
+    string id = 1; // Foydalanuvchi UUID si
+    string username = 2; // Foydalanuvchi nomi
+    string email = 3; // Elektron pochta
+    string password_hash = 4; // Parolning xesh kodi
+    string full_name = 5; // To'liq ism
+    string native_language = 6; // Ona tili
+    string created_at = 7; // Yaratilgan vaqti
+    string updated_at = 8; // O'zgartirilgan vaqti
+}
+
+// Foydalanuvchi yaratish uchun xabar
+message CreateUserRequest {
+    string username = 1; // Foydalanuvchi nomi
+    string email = 2; // Elektron pochta
+    string password = 3; // Parol
+    string full_name = 4; // To'liq ism
+    string native_language = 5; // Ona tili
+}
+
+// Foydalanuvchi yaratish javobi
+message CreateUserResponse {
+    string id = 1; // Yaratilgan foydalanuvchi UUID si
+}
+
+// Foydalanuvchi haqida ma'lumot so'rash uchun xabar
+message GetUserReq {
+    string id = 1; // Foydalanuvchi UUID si
+}
+
+// Foydalanuvchi haqida ma'lumot javobi
+message GetUserResponse {
+    User user = 1; // Foydalanuvchi haqida ma'lumot
+}
+
+// Foydalanuvchi yangilash uchun xabar
+message UpdateUserRequest {
+    string id = 1; // Foydalanuvchi UUID si
+    string username = 2; // Foydalanuvchi nomi
+    string email = 3; // Elektron pochta
+    string password = 4; // Parol
+    string full_name = 5; // To'liq ism
+    string native_language = 6; // Ona tili
+}
+
+// Foydalanuvchi yangilash javobi
+message UpdateUserResponse {
+    User user = 1; // Yangilangan foydalanuvchi haqida ma'lumot
+}
+
+// Foydalanuvchi o'chirish uchun xabar
+message DeleteUserRequest {
+    string id = 1; // Foydalanuvchi UUID si
+}
+
+// Foydalanuvchi o'chirish javobi
+message DeleteUserResponse {
+    string id = 1; // O'chirilgan foydalanuvchi UUID si
+}
+
+// Foydalanuvchilar ro'yxatini so'rash uchun xabar
+message ListUsersRequest {}
+
+// Foydalanuvchilar ro'yxatini javobi
+message ListUsersResponse {
+    repeated User users = 1; // Foydalanuvchilar ro'yxati
+}
