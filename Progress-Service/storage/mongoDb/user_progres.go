@@ -8,7 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-
 type maintanceRepo struct {
 	db *mongo.Collection
 }
@@ -19,7 +18,6 @@ func NewMaintanceRepo(db *mongo.Collection) *maintanceRepo {
 		db: db,
 	}
 }
-
 
 func (r *maintanceRepo) CreateMaintranceSchedule(req *pb.MaintanceScheduleCreate) (*pb.MaintanceScheduleRes, error) {
 	res := &pb.MaintanceScheduleRes{}
