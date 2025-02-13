@@ -12,11 +12,13 @@ type maintanceRepo struct {
 	db *mongo.Collection	
 }
 
+
 func NewMaintanceRepo(db *mongo.Collection) *maintanceRepo {
 	return &maintanceRepo{
 		db: db,
 	}
 }
+
 
 func (r *maintanceRepo) CreateMaintranceSchedule(req *pb.MaintanceScheduleCreate) (*pb.MaintanceScheduleRes, error) {
 	res := &pb.MaintanceScheduleRes{}
