@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+
 type maintanceRepo struct {
 	db *mongo.Collection	
 }
@@ -54,6 +55,7 @@ func (r *maintanceRepo) GetAllMaintanceSchedules(req *pb.MaintanceScheduleFilter
 		res.Schedules = append(res.Schedules, &schedule)
 	}
 
+	
 	if err := cursor.Err(); err != nil {
 		return nil, err
 	}
