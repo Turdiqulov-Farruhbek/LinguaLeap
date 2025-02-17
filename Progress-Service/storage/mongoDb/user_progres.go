@@ -12,7 +12,6 @@ type maintanceRepo struct {
 	db *mongo.Collection	
 }
 
-
 func NewMaintanceRepo(db *mongo.Collection) *maintanceRepo {
 	return &maintanceRepo{
 		db: db,
