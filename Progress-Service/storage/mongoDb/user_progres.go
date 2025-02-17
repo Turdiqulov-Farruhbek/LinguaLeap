@@ -34,7 +34,6 @@ func (r *maintanceRepo) CreateMaintranceSchedule(req *pb.MaintanceScheduleCreate
 	return res, nil
 }
 
-
 func (r *maintanceRepo) GetAllMaintanceSchedules(req *pb.MaintanceScheduleFilter) (*pb.MaintanceScheduleList, error) {
 	res := &pb.MaintanceScheduleList{}
 
