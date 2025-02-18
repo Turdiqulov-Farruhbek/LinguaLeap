@@ -18,7 +18,6 @@ func NewMaintanceRepo(db *mongo.Collection) *maintanceRepo {
 	}
 }
 
-
 func (r *maintanceRepo) CreateMaintranceSchedule(req *pb.MaintanceScheduleCreate) (*pb.MaintanceScheduleRes, error) {
 	res := &pb.MaintanceScheduleRes{}
 
