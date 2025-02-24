@@ -1,1 +1,1 @@
-
+tillar bilan ishlash.
